@@ -134,7 +134,7 @@ document.getElementById('combos').innerHTML=combos.map(c=>`<div class="combo"><d
 const prizes=[['1st','Griller / Deep Fryer',6],['2nd','Jisulife 5000mAh Handheld Fan',12],
  ['3rd','Kyowa Kettle',6],['3rd','Electric Fan Ace Hardware',6],['3rd','Owala-style Flask',12],
  ['4th','UCC 3-in-1 Coffee Regular',6],['4th','Fita 600g',6],['4th','Butter Cookies 400g',6],['4th','Microfiber Towel',6],['4th','Coffee Cup Hilee',12],['4th','Glass Container Bento',12],
- ['5th','Luncheon Meat',18],['5th','Sola',12],['5th','Toothpaste',12],['5th','Handsoap',12],['5th','Starbucks Espresso',12],['5th','Microfiber Towel',12],['5th','Choco Chip Cookies',6],['5th','Stack Potato Chips',18],['5th','Soju',12],['5th','Butter Cookies',6],['5th','Choco Crunchies',6],['5th','Dishwashing Soap',6],
+ ['5th','Luncheon Meat',18],['5th','Sola Iced Tea',12],['5th','Toothpaste',12],['5th','Handsoap',12],['5th','Starbucks Espresso',12],['5th','Microfiber Towel',12],['5th','Choco Chip Cookies',6],['5th','Stack Potato Chips',18],['5th','Soju',12],['5th','Butter Cookies',6],['5th','Choco Crunchies',6],['5th','Dishwashing Soap',6],
  ['6th','Jin Ramyun',36],['6th','Seaweed x3',24],['6th','Alcohol',24],['6th','Cup Noodles Seafood',36],['6th','Mouthwash',12],['6th','Coke',24],['6th','Chippy',48],['6th','Corned Beef',48],['6th','Poysian Inhaler',12],['6th','Nescafe Iced Coffee Mix',6],['6th','Star Margarine',6],['6th','Baby Wipes 80 sheets',24]];
 const names={'1st':'Chiong Guan','2nd':'Tui Teng','3rd':'Sam Hong','4th':'Si Chin','5th':'Ji Ku','6th':'It Siu'};
 document.getElementById('plist').innerHTML=Object.keys(names).map(c=>{const rows=prizes.filter(p=>p[0]===c),per=rows.reduce((s,p)=>s+p[2]/6,0);
