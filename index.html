@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CGC Midautumn Dice Game</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#2b2a6b">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: app shell — sticky indigo header with segmented tabs, one scrolling panel per tab */
+:root{
+  --bg:#f6f3f8; --surface:#ffffff; --fg:#231c2b; --muted:#6f6478; --line:#e6dfea;
+  --brand:#2b2a6b; --brand-fg:#ffffff; --brand-soft:#c9c5f0;
+  --red:#c8293f; --pink-soft:#fbe7ec; --die:#ffffff; --die-line:#c3b6c4; --pip:#231c2b;
+  --display:"Fraunces", Georgia, serif; --body:"Nunito Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15131f; --surface:#1f1c2c; --fg:#eeeaf4; --muted:#a79fb3; --line:#332e44;
+  --brand:#25235c; --brand-fg:#ffffff; --brand-soft:#a9a4e8;
+  --red:#ff7085; --pink-soft:#3a2230; --die:#f4f0f6; --die-line:#8c8098; --pip:#231c2b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15131f; --surface:#1f1c2c; --fg:#eeeaf4; --muted:#a79fb3; --line:#332e44;
+  --brand:#25235c; --brand-fg:#ffffff; --brand-soft:#a9a4e8;
+  --red:#ff7085; --pink-soft:#3a2230; --die:#f4f0f6; --die-line:#8c8098; --pip:#231c2b; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--brand);color:var(--brand-fg)}
+.bar-in{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 12px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-soft);font-weight:700}
+.bar h1{margin:2px 0 0;font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,28px);line-height:1.1;text-wrap:balance}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.12);border-radius:12px;padding:4px;gap:4px}
+.tab{appearance:none;border:0;background:transparent;color:var(--brand-fg);font:700 15px var(--body);padding:10px 8px;border-radius:9px;cursor:pointer;opacity:.8}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--fg);opacity:1;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tab:focus-visible{outline:2px solid var(--brand-soft);outline-offset:2px}
+main{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.panel{display:flex;flex-direction:column;gap:22px}
+h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0}
+.hint{color:var(--muted);font-size:13px;margin:4px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.combo{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.combo:first-child{border-top:0}
+.rank{font-family:var(--display);font-weight:800;font-size:24px;color:var(--red);line-height:1}
+.combo h3{margin:0;font-size:16px;font-weight:800}
+.combo h3 span{font-weight:600;color:var(--muted);font-size:13px}
+.combo p{margin:2px 0 8px;color:var(--muted);font-size:14px}
+.rolls{display:flex;flex-wrap:wrap;gap:10px 16px}
+.ladder{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:16px 1fr;gap:2px 10px;align-items:center;font-size:14px}
+.step b{grid-row:1/3}
+.step span{font-weight:600}
+.step b{color:var(--muted);font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.step.hi span{font-weight:800;color:var(--red)}
+.dice{display:inline-flex;gap:4px}
+.d{width:24px;height:24px;background:var(--die);border:1.5px solid var(--die-line);border-radius:6px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:3px}
+.d i{width:4.5px;height:4.5px;border-radius:50%;background:var(--pip);place-self:center}
+.d.r i{background:#c8293f}
+.d.x{border-style:dashed;background:transparent}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.rule{padding:14px 16px}
+.rule h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+.rule ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.sum{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:var(--pink-soft);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700}
+.cat-h{display:flex;align-items:baseline;gap:8px;padding:12px 16px;background:var(--pink-soft)}
+.cat-h b{color:var(--red);font-size:15px}
+.cat-h span{color:var(--muted);font-size:13px;flex:1}
+.cat-h em{font-style:normal;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.colh,.row{display:grid;grid-template-columns:1fr 64px 64px;gap:8px;padding:9px 16px;align-items:center}
+.colh{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-block:8px 4px}
+.row{border-top:1px solid var(--line);font-size:14px}
+.n{text-align:right;font-variant-numeric:tabular-nums}
+.row .n.per{font-weight:800}
+.row .n.tot{color:var(--muted)}
+.prizes{display:flex;flex-direction:column;gap:14px}
+.reserve{color:var(--muted);font-size:13px;margin:0}
+.dl{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--brand);color:var(--brand-fg);text-decoration:none;font-weight:800;padding:11px 16px;border-radius:10px}
+.dl:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+</style>
+
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <div><div class="eyebrow">Chan Group HQ · Mid-Autumn Fest</div><h1>CGC Midautumn Dice Game</h1></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-dice" aria-controls="dice" aria-selected="true">Dice Rules</button>
+    <button class="tab" role="tab" id="t-prizes" aria-controls="prizes" aria-selected="false">Prize List</button>
+  </div>
+</div></header>
+
+<main>
+  <section class="panel" id="dice" role="tabpanel" aria-labelledby="t-dice">
+    <div><h2>Dice combinations</h2><p class="hint">Roll 6 dice. Red pips are 4s, a dashed die means any number. A roll that fits two prizes wins the higher one.</p></div>
+    <div class="card" id="combos"></div>
+    <div><h2>Game rules</h2></div>
+    <div class="rules">
+      <div class="card rule"><h3>Rolling</h3><ul>
+        <li>The group keeps rolling until the prizes run out.</li>
+        <li>After the prizes run out, there is one last round of rolls, ending with the person who won the last prize.</li></ul></div>
+      <div class="card rule"><h3>1st prize special rule</h3><ul>
+        <li>The 1st prize winner loses their prize if someone else rolls a higher 1st prize combination.</li>
+        <li>They also lose it if they roll a new 1st prize combination that is lower than another person’s.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="panel" id="prizes" role="tabpanel" aria-labelledby="t-prizes" hidden>
+    <div><h2>Prizes per table</h2><p class="hint">Every table gets the same set. Totals are for all 6 tables.</p></div>
+    <div class="sum"><span class="pill">87 prizes per table</span><span class="pill">522 in total</span></div>
+    <div class="prizes" id="plist"></div>
+    <p class="reserve">Held as reserve, not given to tables: 4 Jin Ramyun, 2 Chippy.</p>
+    <a class="dl" href="Mooncake_Dice_Table_Sheets.pdf" target="_blank" rel="noopener">Table head sheets (PDF)</a>
+  </section>
+</main>
+
+<script>
+const PIPS={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+function die(v){if(v==='x')return '<span class="d x"></span>';
+  return '<span class="d'+(v===4||v===1?' r':'')+'">'+PIPS[v].map(i=>'<i style="grid-area:'+(Math.floor(i/3)+1)+'/'+(i%3+1)+'"></i>').join('')+'</span>';}
+const dice=a=>'<span class="dice" aria-label="'+a.map(v=>v==='x'?'any':v).join(', ')+'">'+a.map(die).join('')+'</span>';
+const ladder=[['Four 4s',[4,4,4,4,'x','x']],['Five of a kind (not 4)',[5,5,5,5,5,'x']],['Five 4s',[4,4,4,4,4,'x']],['Six of a kind (not 4)',[6,6,6,6,6,6]],['Six 4s · highest',[4,4,4,4,4,4],1]];
+const combos=[
+ {r:'1st',n:'Champion',l:'Chiong Guan',d:'Four 4s, or five or six of any number. Ranked lowest to highest:',lad:1},
+ {r:'2nd',n:'Straight or two triples',l:'Tui Teng',d:'All numbers 1 to 6, or three of one number and three of another.',rolls:[[1,2,3,4,5,6],[3,3,3,6,6,6]]},
+ {r:'3rd',n:'Three 4s',l:'Sam Hong',d:'Three 4s, any number on the other three dice.',rolls:[[4,4,4,'x','x','x']]},
+ {r:'4th',n:'Four of a kind',l:'Si Chin',d:'Four of the same number, except 4.',rolls:[[6,6,6,6,'x','x']]},
+ {r:'5th',n:'Two 4s',l:'Ji Ku',d:'Two 4s, any number on the other four dice.',rolls:[[4,4,'x','x','x','x']]},
+ {r:'6th',n:'One 4',l:'It Siu',d:'One 4, any number on the other five dice.',rolls:[[4,'x','x','x','x','x']]}];
+document.getElementById('combos').innerHTML=combos.map(c=>`<div class="combo"><div class="rank">${c.r}</div><div>
+ <h3>${c.n} <span>· ${c.l}</span></h3><p>${c.d}</p>
+ ${c.lad?'<div class="ladder">'+ladder.map((s,i)=>`<div class="step${s[2]?' hi':''}"><b>${i+1}</b><span>${s[0]}</span>${dice(s[1])}</div>`).join('')+'</div>'
+ :'<div class="rolls">'+c.rolls.map(dice).join('')+'</div>'}</div></div>`).join('');
+const prizes=[['1st','Griller / Deep Fryer',6],['2nd','Jisulife 5000mAh Handheld Fan',12],
+ ['3rd','Kyowa Kettle',6],['3rd','Electric Fan Ace Hardware',6],['3rd','Owala-style Flask',12],
+ ['4th','UCC 3-in-1 Coffee Regular',6],['4th','Fita 600g',6],['4th','Butter Cookies 400g',6],['4th','Microfiber Towel',6],['4th','Coffee Cup Hilee',12],['4th','Glass Container Bento',12],
+ ['5th','Luncheon Meat',18],['5th','Sola',12],['5th','Toothpaste',12],['5th','Handsoap',12],['5th','Starbucks Espresso',12],['5th','Microfiber Towel',12],['5th','Choco Chip Cookies',6],['5th','Stack Potato Chips',18],['5th','Soju',12],['5th','Butter Cookies',6],['5th','Choco Cookies',6],['5th','Dishwashing Soap',6],
+ ['6th','Jin Ramyun',36],['6th','Seaweed x3',24],['6th','Alcohol',24],['6th','Cup Noodles Seafood',36],['6th','Mouthwash',12],['6th','Coke',24],['6th','Chippy',48],['6th','Corned Beef',48],['6th','Poysian Inhaler',12],['6th','Nescafe Iced Coffee Mix',6],['6th','Star Margarine',6],['6th','Baby Wipes 80 sheets',24]];
+const names={'1st':'Chiong Guan','2nd':'Tui Teng','3rd':'Sam Hong','4th':'Si Chin','5th':'Ji Ku','6th':'It Siu'};
+document.getElementById('plist').innerHTML=Object.keys(names).map(c=>{const rows=prizes.filter(p=>p[0]===c),per=rows.reduce((s,p)=>s+p[2]/6,0);
+ return `<div class="card"><div class="cat-h"><b>${c} prize</b><span>${names[c]}</span><em>${per} per table</em></div>
+ <div class="colh"><span>Item</span><span class="n">Per table</span><span class="n">Total</span></div>
+ ${rows.map(p=>`<div class="row"><span>${p[1]}</span><span class="n per">${p[2]/6}</span><span class="n tot">${p[2]}</span></div>`).join('')}</div>`}).join('');
+const tabs=[...document.querySelectorAll('.tab')];
+function show(id,push){tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
+ if(push){try{history.replaceState(null,'','#'+id)}catch(e){}} window.scrollTo(0,0);}
+tabs.forEach(t=>t.addEventListener('click',()=>show(t.getAttribute('aria-controls'),true)));
+tabs.forEach((t,i)=>t.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=tabs[(i+1)%2];n.focus();n.click();}}));
+if(location.hash==='#prizes')show('prizes');
+</script>
+
+</body>
+</html>
