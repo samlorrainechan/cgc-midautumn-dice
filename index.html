@@ -68,7 +68,7 @@ h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0}
 .cat-h b{color:var(--red);font-size:15px}
 .cat-h span{color:var(--muted);font-size:13px;flex:1}
 .cat-h em{font-style:normal;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
-.colh,.row{display:grid;grid-template-columns:1fr 64px 64px;gap:8px;padding:9px 16px;align-items:center}
+.colh,.row{display:grid;grid-template-columns:1fr 80px;gap:8px;padding:9px 16px;align-items:center}
 .colh{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-block:8px 4px}
 .row{border-top:1px solid var(--line);font-size:14px}
 .n{text-align:right;font-variant-numeric:tabular-nums}
@@ -106,8 +106,8 @@ h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0}
   </section>
 
   <section class="panel" id="prizes" role="tabpanel" aria-labelledby="t-prizes" hidden>
-    <div><h2>Prizes per table</h2><p class="hint">Every table gets the same set. Totals are for all 6 tables.</p></div>
-    <div class="sum"><span class="pill">87 prizes per table</span><span class="pill">522 in total</span></div>
+    <div><h2>Prizes per table</h2><p class="hint">Every table gets the same set of prizes.</p></div>
+    <div class="sum"><span class="pill">87 prizes per table</span></div>
     <div class="prizes" id="plist"></div>
     <p class="reserve">Held as reserve, not given to tables: 4 Jin Ramyun, 2 Chippy.</p>
     <a class="dl" href="Mooncake_Dice_Table_Sheets.pdf" target="_blank" rel="noopener">Table head sheets (PDF)</a>
@@ -139,8 +139,8 @@ const prizes=[['1st','Griller / Deep Fryer',6],['2nd','Jisulife 5000mAh Handheld
 const names={'1st':'Chiong Guan','2nd':'Tui Teng','3rd':'Sam Hong','4th':'Si Chin','5th':'Ji Ku','6th':'It Siu'};
 document.getElementById('plist').innerHTML=Object.keys(names).map(c=>{const rows=prizes.filter(p=>p[0]===c),per=rows.reduce((s,p)=>s+p[2]/6,0);
  return `<div class="card"><div class="cat-h"><b>${c} prize</b><span>${names[c]}</span><em>${per} per table</em></div>
- <div class="colh"><span>Item</span><span class="n">Per table</span><span class="n">Total</span></div>
- ${rows.map(p=>`<div class="row"><span>${p[1]}</span><span class="n per">${p[2]/6}</span><span class="n tot">${p[2]}</span></div>`).join('')}</div>`}).join('');
+ <div class="colh"><span>Item</span><span class="n">Per table</span></div>
+ ${rows.map(p=>`<div class="row"><span>${p[1]}</span><span class="n per">${p[2]/6}</span></div>`).join('')}</div>`}).join('');
 const tabs=[...document.querySelectorAll('.tab')];
 function show(id,push){tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
  if(push){try{history.replaceState(null,'','#'+id)}catch(e){}} window.scrollTo(0,0);}
